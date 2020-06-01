@@ -1,3 +1,5 @@
+
+/********** Server Setup ******************* */
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -14,3 +16,14 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log('Server is starting on PORT, ', PORT);
 })
+/****************************************** */
+
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = process.env.MONGOLAB_URI; //environment variable storing your connection url - hidden for security purposes
+
+MongoClient.connect(uri, (err, db) => {
+    if(!err) console.log("Connection Success");
+});
+
+
