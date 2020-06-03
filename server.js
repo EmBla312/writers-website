@@ -23,7 +23,7 @@ app.listen(PORT, () => {
 
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = process.env.MONGODB_URI; //environment variable storing your connection url - hidden for security purposes
+const uri = process.env.MONGODB_URI; //to reset => $env:MONGODB_URI='<insert uri>'
 const dbname = 'writeweb-db';
 
 function add_user() {
