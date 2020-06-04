@@ -15,19 +15,29 @@ app.use(express.static(path.join(__dirname, 'pages'))); //this sets a static pat
 
 app.listen(PORT, () => {
     console.log('Server is starting on PORT, ', PORT);
-    console.log('MONGODB_URI: ', process.env.MONGODB_URI);
-    add_user();
+
+    
+
 
 })
 /****************************************** */
-
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI; //to reset => $env:MONGODB_URI='<insert uri>'
 const dbname = 'writeweb-db';
 
-function add_user() {
-    MongoClient.connect(uri, { useNewUrlParser: true }, (err, client) => {
+app.use(express.json()); //handle json format?
+app.use(express.urlencoded({extended: true})); //retrieve form data in url?
+
+//so app.post('<insert path>', (callback)), in the <insert path> section, you need to place where the form is.
+
+const date = new Date(); //for tracking dates of new created users
+
+app.post('/signup.html', (req, res) => {
+
+    console.log('Data: ', req.body.username, req.body.password, req.body.email);
+
+    MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
         if (err) console.log('ERROR MONGODB: ', err, client);
         else {
             var db = client.db(dbname);  //get database object
@@ -35,19 +45,18 @@ function add_user() {
             var users_collection = db.collection('users');  //get colleciton in database
 
             var userdoc = {
-                username: 'larry',
-                password: 'abcde1$',
-                email: 'larry@gmail.com',
-                createDateTime: { month: 'June', day: 2, year: 2020, hour: 12, minute: 39, second: 57 },
-                lastlogin: { month: 'June', day: 1, year: 2020, hour: 13, minute: 0, second: 4 }
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                createDateTime: date,
+                lastlogin: date
             }
 
-            users_collection.insert(userdoc);
+            users_collection.insertOne(userdoc);
         }
 
-
     });
-}
+});
 
 
 
