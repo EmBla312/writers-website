@@ -7,11 +7,11 @@ const path = require('path');
 const PORT = process.env.PORT || 8000;
 
 //app.use(express.urlencoded());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'pages'))); //this sets a static path -> for serving static pages
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(_dirname));
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(_dirname));
+// }); // this is done for a single page
 
 app.listen(PORT, () => {
     console.log('Server is starting on PORT, ', PORT);
