@@ -49,8 +49,9 @@ app.post('/signup.html', (req, res) => {
             });
 
             usersCursor.forEach(document => {
+                //if a user already exists with the sign up username, don't create a new user
                 if(document.username === req.body.username) {
-                    console.log('sign up successful');
+                    console.log('sign up unsuccessful');
                 }
                 else {
                     var userdoc = {
@@ -62,6 +63,7 @@ app.post('/signup.html', (req, res) => {
                     }
         
                     users_collection.insertOne(userdoc);
+                    console.log('sign up successful: user logged');
                 }
             });
             
