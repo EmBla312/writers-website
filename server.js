@@ -15,10 +15,6 @@ app.use(express.static(path.join(__dirname, 'pages'))); //this sets a static pat
 
 app.listen(PORT, () => {
     console.log('Server is starting on PORT, ', PORT);
-
-
-
-
 })
 /****************************************** */
 
@@ -43,17 +39,13 @@ app.post('/signup.html', (req, res) => {
             var db = client.db(dbname);  //get database object
 
             var users_collection = db.collection('users');  //get colleciton in database
+            
+            users_collection.find({ username: req.body.username }).toArray((err, res) => {
+                if(err) throw err;
+                console.log(res);    //res = an array of all objects/docs in db
 
-            var usersCursor = users_collection.find({
-                username: req.body.username
-            });
-
-            usersCursor.forEach(document => {
-                //if a user already exists with the sign up username, don't create a new user
-                if(document.username === req.body.username) {
-                    console.log('sign up unsuccessful');
-                }
-                else {
+                //if there is no existing user with the signup username
+                if(res.length < 1) {
                     var userdoc = {
                         username: req.body.username,
                         password: req.body.password,
@@ -61,12 +53,16 @@ app.post('/signup.html', (req, res) => {
                         createDateTime: date,
                         lastlogin: date
                     }
-        
+    
                     users_collection.insertOne(userdoc);
                     console.log('sign up successful: user logged');
                 }
+                //if user already exists
+                else {
+                    console.log("username already exists: failed sign up");
+                }
             });
-            
+
         }
     });
 });
@@ -87,7 +83,7 @@ app.post('/signin.html', (req, res) => {
             });
 
             usersCursor.forEach(document => {
-                if(document.password === req.body.password) {
+                if (document.password === req.body.password) {
                     console.log('login successful');
                 }
                 else {
