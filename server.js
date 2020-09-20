@@ -27,6 +27,8 @@ app.use(express.urlencoded({ extended: true })); //retrieve form data in url?
 
 //so app.post('<insert path>', (callback)), in the <insert path> section, you need to place where the form is.
 
+var passwordHash = require('password-hash');
+
 const date = new Date(); //for tracking dates of new created users
 
 app.post('/signup.html', (req, res) => {
@@ -48,14 +50,14 @@ app.post('/signup.html', (req, res) => {
                 if(res.length < 1) {
                     var userdoc = {
                         username: req.body.username,
-                        password: req.body.password,
+                        password: passwordHash.generate(req.body.password),
                         email: req.body.email,
                         createDateTime: date,
                         lastlogin: date
                     }
     
                     users_collection.insertOne(userdoc);
-                    console.log('sign up successful: user logged');
+                    console.log('sign up successful: user logged: password = ', userdoc.password);
                 }
                 //if user already exists
                 else {
@@ -83,7 +85,7 @@ app.post('/signin.html', (req, res) => {
             });
 
             usersCursor.forEach(document => {
-                if (document.password === req.body.password) {
+                if(passwordHash.verify(req.body.password, document.password) == true){
                     console.log('login successful');
                 }
                 else {
