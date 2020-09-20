@@ -31,7 +31,7 @@ var passwordHash = require('password-hash');
 
 const date = new Date(); //for tracking dates of new created users
 
-app.post('/signup.html', (req, res) => {
+app.post('/signup-response', (req, res) => {
 
     console.log('Data: ', req.body.username, req.body.password, req.body.email);
 
@@ -57,7 +57,7 @@ app.post('/signup.html', (req, res) => {
                     }
     
                     users_collection.insertOne(userdoc);
-                    console.log('sign up successful: user logged: password = ', userdoc.password);
+                    console.log('sign up successful: user logged:'); //console.log('password = ', userdoc.password);
                 }
                 //if user already exists
                 else {
@@ -69,7 +69,7 @@ app.post('/signup.html', (req, res) => {
     });
 });
 
-app.post('/signin.html', (req, res) => {
+app.post('/signin-response', (req, res) => {
     console.log('in signin app.post');
     MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
         if (err) console.log('ERROR MONGODB: ', err, client);
