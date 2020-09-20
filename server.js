@@ -57,7 +57,10 @@ app.post('/signup-response', (req, res) => {
                     }
     
                     users_collection.insertOne(userdoc);
-                    console.log('sign up successful: user logged:'); //console.log('password = ', userdoc.password);
+                    console.log('sign up successful: user logged'); 
+                    //console.log('password = ', userdoc.password); //check if password is being hashed
+
+
                 }
                 //if user already exists
                 else {
@@ -78,7 +81,7 @@ app.post('/signin-response', (req, res) => {
 
             var users_collection = db.collection('users');  //get colleciton in database
 
-            console.log("Query: ", req.body.username);
+            //console.log("Query: ", req.body.username); //check if query is grabbed
             //find how many times username is found within the data base
             var usersCursor = users_collection.find({
                 username: req.body.username
@@ -87,9 +90,11 @@ app.post('/signin-response', (req, res) => {
             usersCursor.forEach(document => {
                 if(passwordHash.verify(req.body.password, document.password) == true){
                     console.log('login successful');
+                    res.redirect("/index.html");
                 }
                 else {
                     console.log('login not successful');
+                    
                 }
             });
 
